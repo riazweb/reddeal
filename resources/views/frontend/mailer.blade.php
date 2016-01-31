@@ -1,0 +1,1 @@
+hello world {{$data['name']}} laravel its your 
