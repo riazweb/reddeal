@@ -64,13 +64,36 @@ class WelcomeController extends Controller {
 	}
 
 	public function ItemForm($id){
-		return view('frontend.itemform')->with('id',$id);
+		return view('frontend.item_form')->with('id',$id);
 	}
 
 	public function ItemOrder(Request $request){
 		$post = $request->all();
 		//var_dump($post);exit;
-		$data =array(
+
+		$errors         = array();  	// array to hold validation errors
+		$data 			= array(); 		// array to pass back data
+
+		if (empty($post['name']))
+			$errors['name'] = 'Name is required must.';
+
+		if (empty($post['email']))
+			$errors['email'] = 'Email is required.';
+
+		if (empty($post['address']))
+			$errors['address'] = 'address is required.';
+
+		if (empty($post['mobile']))
+			$errors['mobile'] = 'mobile is required.';
+
+		if ( ! empty($errors)) {
+
+			$data['success'] = false;
+			$data['errors']  = $errors;
+		} else {
+
+
+			$submitdata =array(
 			'item_id' => $post['item_id'],
 			'name' => $post['name'],
 			'mobile' => $post['mobile'],
@@ -79,20 +102,25 @@ class WelcomeController extends Controller {
 
 		);
 
-		$row = DB::table('order')->insert($data);
-
-		
+		$row = DB::table('order')->insert($submitdata);
 
 		if($row > 0){
 
-			Mail::send('frontend.mailer', ['data' => $data], function($message)
+			Mail::send('frontend.mailer', ['data' => $submitdata], function($message)
 			{
 				$message->to('syedriazahmed@live.com', 'John Smith')->subject('Welcome!');
 			});
 
-			\Session::flash('message','order submit');
-			return  redirect('/');
+			//\Session::flash('message','order submit');
+			//return  redirect('/');
 		}
+			$data['success'] = true;
+			$data['message'] = 'order submit!';
+		}
+
+		return $data;
+
+		
 	}
 
 

@@ -21,7 +21,7 @@ Route::get('/detail-page/{id}', 'WelcomeController@detail');
 
 Route::get('buy/{id}', 'WelcomeController@ItemForm' );
 
-Route::post('order-save', 'WelcomeController@ItemOrder' );
+Route::post('buy/order-save', 'WelcomeController@ItemOrder' );
 
 Route::post('order', 'WelcomeController@ItemOrder' );
 
